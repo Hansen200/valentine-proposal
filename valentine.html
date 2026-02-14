@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Proposal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #ff69b4, #ffb6c1);
+            color: white;
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .buttons {
+            margin-top: 30px;
+        }
+        button {
+            font-size: 1.5em;
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        #yes {
+            background-color: #ff1493;
+            color: white;
+        }
+        #no {
+            background-color: #dc143c;
+            color: white;
+        }
+        #message {
+            display: none;
+            font-size: 2em;
+            margin-top: 50px;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+        #extraText {
+            display: none;
+            font-size: 1.5em;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 3s 1s forwards; /* Delay untuk muncul setelah pesan utama */
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        .hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .heart {
+            position: absolute;
+            color: #ff69b4;
+            font-size: 2em;
+            animation: float 5s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ff1493;
+            animation: confettiFall 4s linear infinite;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+        .sparkle {
+            position: absolute;
+            color: gold;
+            font-size: 1.5em;
+            animation: sparkle 1s ease-in-out infinite alternate;
+        }
+        @keyframes sparkle {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1.5); }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="hearts"></div>
+    <div class="confetti-container" id="confettiContainer"></div>
+    <h1 id="question">Will you be my Valentine? 💖</h1>
+    <div class="buttons">
+        <button id="yes">Yes</button>
+        <button id="no">No</button>
+    </div>
+    <div id="message">Yeay makasih sayang sudah menerima ajakan valentine ku❤️. Aku harap kita bisa sampai selama2nya.</div>
+    <div id="extraText">
+        Aku sayang kamu selamanya! 💕<br>
+        Kamu adalah cahaya hidupku, dan aku ingin menghabiskan setiap hari bersamamu. 😘<br>
+        Happy Valentine's Day, my love! 🎉
+    </div>
+    <audio id="bgMusic" loop>
+        <source src="your-romantic-song.mp3" type="audio/mpeg"> <!-- Ganti dengan URL/file MP3 Anda -->
+    </audio>
+
+    <script>
+        let yesSize = 1;
+        let noClicks = 0;
+        const yesBtn = document.getElementById('yes');
+        const noBtn = document.getElementById('no');
+        const question = document.getElementById('question');
+        const message = document.getElementById('message');
+        const extraText = document.getElementById('extraText');
+        const buttons = document.querySelector('.buttons');
+        const heartsContainer = document.getElementById('hearts');
+        const confettiContainer = document.getElementById('confettiContainer');
+        const bgMusic = document.getElementById('bgMusic');
+
+        // Generate floating hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            heartsContainer.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 300); // Lebih cepat untuk lebih meriah
+
+        // Generate confetti
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor = ['#ff1493', '#ffb6c1', '#ff69b4', '#dc143c'][Math.floor(Math.random() * 4)];
+            confetti.style.animationDelay = Math.random() * 4 + 's';
+            confettiContainer.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 4000);
+        }
+        setInterval(createConfetti, 200);
+
+        // Generate sparkles
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.textContent = '✨';
+            sparkle.style.left = Math.random() * 100 + 'vw';
+            sparkle.style.top = Math.random() * 100 + 'vh';
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 1000);
+        }
+
+        noBtn.addEventListener('click', () => {
+            noClicks++;
+            yesSize += 0.5;
+            yesBtn.style.transform = `scale(${yesSize})`;
+            question.textContent = "Are you sure? 😢";
+            buttons.style.transform = `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px)`;
+        });
+
+        yesBtn.addEventListener('click', () => {
+            // Hide question and buttons, show message and extra text
+            question.style.display = 'none';
+            buttons.style.display = 'none';
+            message.style.display = 'block';
+            extraText.style.display = 'block';
+            // Play music
+            bgMusic.play();
+            // Increase hearts and confetti for celebration
+            setInterval(createHeart, 100);
+            setInterval(createConfetti, 50);
+            setInterval(createSparkle, 300);
+        });
+    </script>
+</body>
+</html>
